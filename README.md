@@ -1,70 +1,66 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Overview
+This project demonstrates the deployment of a simple "Hello World" web application using ReactJS, containerized with Docker, and orchestrated with Kubernetes. The setup runs locally using Kind.
 
-In the project directory, you can run:
+## Tools Used
+- **ReactJS Web Application**: A basic web application displaying "Hello World".
+- **Docker Integration**: Docker Desktop Containerization of the ReactJS application.
+- **Kubernetes Deployment**: Local deployment using Kind, with a pod and a NodePort service configuration.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation and Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Step-by-Step Guide
+1. **Install Docker Desktop**
 
-### `npm test`
+2. **Install Kind**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Create a Kubernetes Cluster with Kind**:
+   ```shell
+   kind create cluster
+   ```
+   The command creates a Docker image `kindest/node` and a Docker container `kind-control-plane`.
 
-### `npm run build`
+4. **Develop the Hello World App**: A basic ReactJS application displaying a "Hello World" message.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. **Create a Dockerfile**: Dockerfile for building the ReactJS app Docker image.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+6. **Build and Tag the Docker Image**:
+   ```shell
+   docker build -t hello-world-webserver .
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+7. **Load the Docker Image into Kind**:
+   ```shell
+   kind load docker-image hello-world-webserver
+   ```
+   Since Kind runs in Docker Desktop, this loads the locally built image into the Kind cluster.
 
-### `npm run eject`
+8. **Create Pod Configuration File (`hello-world-pod.yaml`)**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+9. **Create Service Configuration File (`hello-world-service.yaml`)**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+10. **Apply the pod and service files**
+   ```shell
+   kubectl apply -f hello-world-pod.yaml
+      kubectl apply -f hello-world-service.yaml
+   ```
+10. **Check Services and Ports**:
+   ```shell
+   kubectl get pods
+   kubectl get services
+   ```
+   Verify the pod and service are correctly set up. Note the exposed port (30007 as configured in hello-world-service.yaml)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+10. **Testing the Application**: Access the application on `localhost:30007`.
+If direct access isn't working, do port-forwarding:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+11. **Port Forwarding**:
+    ```shell
+    kubectl port-forward service/hello-world-service 30007:80
+    ```
+    This forwards traffic from your port 30007 to the service's port 80, enabling access to the application at `http://localhost:30007`.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

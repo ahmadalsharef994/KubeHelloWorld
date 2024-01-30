@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-world
+  labels:                 # Add this labels section
+    app: hello-world      # Label key-value pair
+spec:
+  containers:
+  - name: webserver
+    image: hello-world-webserver
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80 # The port the container exposes

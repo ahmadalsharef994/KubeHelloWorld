@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80 #internal port from within the cluster
+    nodePort: 30007 #external port
+  selector:
+    app: hello-world   # Selects the pod with label 'app: hello-world'
